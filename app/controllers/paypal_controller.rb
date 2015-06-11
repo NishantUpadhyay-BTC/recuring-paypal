@@ -90,7 +90,8 @@ class PaypalController < ApplicationController
     response = http.post(uri.request_uri, raw,
                          'Content-Length' => "#{raw.size}"
     )
-    puts response.body
+    puts "RESPONSE FROM PAYPAL:::#{response.body}"
+    response.body
   end
 end
 
