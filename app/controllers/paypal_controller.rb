@@ -44,7 +44,7 @@ class PaypalController < ApplicationController
     logger.error "*******************ERROR********************"
     puts '==============='
     response = validate_IPN_notification(request.raw_post)
-    binding.pry
+    puts response.inspect
     case response
       when "VERIFIED"
         puts response.inspect
@@ -91,8 +91,7 @@ class PaypalController < ApplicationController
                          'Content-Length' => "#{raw.size}",
                          'User-Agent' => "My custom user agent"
     )
-    binding.pry
-    puts response.inspect
+    puts response.body
   end
 end
 
