@@ -8,8 +8,8 @@ class PaypalController < ApplicationController
 
   def checkout
     ppr = PayPal::Recurring.new({
-                           :return_url   => 'http://localhost:3000/paypal/new',
-                           :cancel_url   => "http://localhost:3000",
+                           :return_url   => 'https://morning-castle-2674.herokuapp.compaypal/new',
+                           :cancel_url   => "https://morning-castle-2674.herokuapp.com/",
                            :ipn_url     => "https://morning-castle-2674.herokuapp.com/paypal/notifier",
                            :description  => "Awesome - Monthly Subscription",
                            :amount       => "9.00",
@@ -26,8 +26,8 @@ class PaypalController < ApplicationController
 
   def subscribe
     prr = PayPal::Recurring.new({
-                              :return_url   => 'http://localhost:3000/paypal/new',
-                              :cancel_url   => "http://localhost:3000",
+                              :return_url   => 'https://morning-castle-2674.herokuapp.compaypal/new',
+                              :cancel_url   => "https://morning-castle-2674.herokuapp.com/",
                               :ipn_url     => "https://morning-castle-2674.herokuapp.com/paypal/notifier",
                               :description  => "Awesome - Monthly Subscription",
                               :amount       => "9.00",
