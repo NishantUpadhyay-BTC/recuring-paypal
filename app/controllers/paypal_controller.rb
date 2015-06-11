@@ -72,6 +72,7 @@ class PaypalController < ApplicationController
       ppr = PayPal::Recurring::Notification.new(params)
       t = ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
     puts "#{t.inspect}"
+    puts "#{t.body}"
       if ppr.verified? && ppr.completed?
         if ppr.express_checkout? || ppr.recurring_payment?
           #do stuff here
@@ -79,7 +80,7 @@ class PaypalController < ApplicationController
       else
         #raise response.errors.inspect
       end
-    
+
     render :nothing => true
   end
 
