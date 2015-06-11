@@ -41,27 +41,42 @@ class PaypalController < ApplicationController
   end
 
   def notifier
-    puts '==============='
-    puts "REQUEST_OBJ:::::#{request.raw_post}"
-    response = validate_IPN_notification(request.raw_post)
-    puts "RESPONSE INSIDE NOTIFIER::::::::::::::::::#{response.inspect}"
-    case response
-      when "VERIFIED"
-
-        puts "INSPECT:#{response.inspect}"
-        puts "BODY:::#{response.body}"
-      # check that paymentStatus=Completed
-      # check that txnId has not been previously processed
-      # check that receiverEmail is your Primary PayPal email
-      # check that paymentAmount/paymentCurrency are correct
-      # process payment
-      when "INVALID"
-        
-        puts "INSPECT:#{response.inspect}"
-        puts "BODY:::#{response.body}"
-      # log for investigation
+    # puts '==============='
+    # puts "REQUEST_OBJ:::::#{request.raw_post}"
+    # response = validate_IPN_notification(request.raw_post)
+    # puts "RESPONSE INSIDE NOTIFIER::::::::::::::::::#{response.inspect}"
+    # case response
+    #   when "VERIFIED"
+    #
+    #     puts "INSPECT:#{response.inspect}"
+    #     puts "BODY:::#{response.body}"
+    #   # check that paymentStatus=Completed
+    #   # check that txnId has not been previously processed
+    #   # check that receiverEmail is your Primary PayPal email
+    #   # check that paymentAmount/paymentCurrency are correct
+    #   # process payment
+    #   when "INVALID"
+    #
+    #     puts "INSPECT:#{response.inspect}"
+    #     puts "BODY:::#{response.body}"
+    #   # log for investigation
+    #   else
+    #     # error
+    # end
+    # render :nothing => true
+    puts "_________________________________"
+    subscription = Subscription.where(:email => params[:payer_email], :status => "Active").last
+    if subscription
+      PaymentsNotification.create!(:params => params.to_json.gsub("\"", "'"), :status => params[:payment_status], :transaction_id => params[:txn_id])
+      ppr = PayPal::Recurring::Notification.new(params)
+      ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
+      if ppr.verified? && ppr.completed?
+        if ppr.express_checkout? || ppr.recurring_payment?
+          #do stuff here
+        end
       else
-        # error
+        #raise response.errors.inspect
+      end
     end
     render :nothing => true
   end
