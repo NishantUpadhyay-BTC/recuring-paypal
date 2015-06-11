@@ -81,17 +81,21 @@ class PaypalController < ApplicationController
 
   protected
   def validate_IPN_notification(raw)
+    begin
     uri = URI.parse('https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate')
     http = Net::HTTP.new(uri.host, uri.port)
     http.open_timeout = 60
     http.read_timeout = 60
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    
     http.use_ssl = true
     response = http.post(uri.request_uri, raw,
                          'Content-Length' => "#{raw.size}"
     )
+    rescue => e
+      response = e
+    end
     puts "RESPONSE FROM PAYPAL:::#{response.body}"
-    response.body
+    response
   end
 end
 
