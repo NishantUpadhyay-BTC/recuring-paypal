@@ -79,7 +79,7 @@ class PaypalController < ApplicationController
       else
         #raise response.errors.inspect
       end
-    end
+    
     render :nothing => true
   end
 
