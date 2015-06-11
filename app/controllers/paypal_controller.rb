@@ -56,7 +56,9 @@ class PaypalController < ApplicationController
       # check that paymentAmount/paymentCurrency are correct
       # process payment
       when "INVALID"
-        puts response.inspect
+        
+        puts "INSPECT:#{response.inspect}"
+        puts "BODY:::#{response.body}"
       # log for investigation
       else
         # error
