@@ -10,7 +10,6 @@ class PaypalController < ApplicationController
     ppr = PayPal::Recurring.new({
                            :return_url   => 'https://morning-castle-2674.herokuapp.com/paypal/new',
                            :cancel_url   => "https://morning-castle-2674.herokuapp.com/",
-                           :ipn_url     => "https://morning-castle-2674.herokuapp.com/paypal/notifier",
                            :description  => "Awesome - Monthly Subscription",
                            :amount       => "9.00",
                            :currency     => "USD"
@@ -45,6 +44,7 @@ class PaypalController < ApplicationController
     logger.error "*******************ERROR********************"
     puts '==============='
     response = validate_IPN_notification(request.raw_post)
+    binding.pry
     case response
       when "VERIFIED"
         puts response.inspect
@@ -91,6 +91,7 @@ class PaypalController < ApplicationController
                          'Content-Length' => "#{raw.size}",
                          'User-Agent' => "My custom user agent"
     )
+    binding.pry
     puts response.inspect
   end
 end
