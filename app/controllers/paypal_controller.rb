@@ -80,7 +80,7 @@ class PaypalController < ApplicationController
 
   private
   def validate_IPN_notification(raw)
-    puts "INSIDE VALIDATE IPN METHOD"
+    puts "***INSIDE VALIDATE IPN METHOD**"
     begin
     uri = URI.parse('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_notify-validate')
     http = Net::HTTP.new(uri.host, uri.port)
