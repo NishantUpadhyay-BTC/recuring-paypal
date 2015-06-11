@@ -47,7 +47,9 @@ class PaypalController < ApplicationController
     puts "RESPONSE INSIDE NOTIFIER::::::::::::::::::#{response.inspect}"
     case response
       when "VERIFIED"
-        puts response.inspect
+
+        puts "INSPECT:#{response.inspect}"
+        puts "BODY:::#{response.body}"
       # check that paymentStatus=Completed
       # check that txnId has not been previously processed
       # check that receiverEmail is your Primary PayPal email
