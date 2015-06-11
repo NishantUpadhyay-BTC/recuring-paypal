@@ -65,11 +65,13 @@ class PaypalController < ApplicationController
     # end
     # render :nothing => true
     puts "________________#{params}_________________"
-    subscription = Subscription.where(:email => params[:payer_email], :status => "Active").last
-    if subscription
+
+
+
       # PaymentsNotification.create!(:params => params.to_json.gsub("\"", "'"), :status => params[:payment_status], :transaction_id => params[:txn_id])
       ppr = PayPal::Recurring::Notification.new(params)
-      ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
+      t = ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
+    puts "#{t.inspect}"
       if ppr.verified? && ppr.completed?
         if ppr.express_checkout? || ppr.recurring_payment?
           #do stuff here
