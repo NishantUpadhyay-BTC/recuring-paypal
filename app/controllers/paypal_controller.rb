@@ -42,6 +42,7 @@ class PaypalController < ApplicationController
   end
 
   def notifier
+    logger.error "*******************ERROR********************"
     puts '==============='
     response = validate_IPN_notification(request.raw_post)
     case response
