@@ -42,6 +42,7 @@ class PaypalController < ApplicationController
 
   def notifier
     puts '==============='
+    puts "REQUEST_OBJ:::::#{request.raw_post}"
     response = validate_IPN_notification(request.raw_post)
     puts "RESPONSE INSIDE NOTIFIER::::::::::::::::::#{response.inspect}"
     case response
