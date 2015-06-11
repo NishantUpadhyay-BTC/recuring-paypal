@@ -43,7 +43,7 @@ class PaypalController < ApplicationController
   def notifier
     puts '==============='
     response = validate_IPN_notification(request.raw_post)
-    puts response.inspect
+    puts "RESPONSE INSIDE NOTIFIER::::::::::::::::::#{response.inspect}"
     case response
       when "VERIFIED"
         puts response.inspect
@@ -80,17 +80,20 @@ class PaypalController < ApplicationController
 
   private
   def validate_IPN_notification(raw)
-    puts "***INSIDE VALIDATE IPN METHOD**"
+    puts "INSIDE VALIDATE IPN METHOD"
     begin
     uri = URI.parse('https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate')
     http = Net::HTTP.new(uri.host, uri.port)
     http.open_timeout = 60
     http.read_timeout = 60
+
+    http.use_ssl = true
     response = http.post(uri.request_uri, raw,
                          'Content-Length' => "#{raw.size}"
     )
     rescue => e
       response = e
+      puts "EXCEPTION::::#{e}"
     end
     puts "RESPONSE FROM PAYPAL:::#{response.body}"
     response
