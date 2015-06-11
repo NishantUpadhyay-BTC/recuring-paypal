@@ -64,7 +64,7 @@ class PaypalController < ApplicationController
     #     # error
     # end
     # render :nothing => true
-    puts "_________________________________"
+    puts "________________#{params}_________________"
     subscription = Subscription.where(:email => params[:payer_email], :status => "Active").last
     if subscription
       # PaymentsNotification.create!(:params => params.to_json.gsub("\"", "'"), :status => params[:payment_status], :transaction_id => params[:txn_id])
