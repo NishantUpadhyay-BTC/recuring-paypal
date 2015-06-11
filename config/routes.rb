@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   get 'paypal/subscribe' => 'paypal#subscribe', as: :new_subscribe
   get 'paypal/ipn' => 'paypal#ipn', as: :ipn_test
   get 'paypal/req_payment' => 'paypal#req_payment', as: :req_payment
-  post 'paypal/notifier' => 'payment_notifications#create', as: :payment_notifier
+
   resources :paypal
+  post 'paypal/notifier' => 'paypal#notifier', as: :payment_notifier
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

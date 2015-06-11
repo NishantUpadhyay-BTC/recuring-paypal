@@ -1,5 +1,5 @@
 class PaypalController < ApplicationController
-
+  protect_from_forgery :except => [:notifier] #Otherwise the request from PayPal wouldn't make it to the controller
   def new
     if params[:PayerID]
       session[:payer_id]= params[:PayerID]
@@ -41,6 +41,26 @@ class PaypalController < ApplicationController
     redirect_to req_payment_path
   end
 
+  def notifier
+    puts '==============='
+    response = validate_IPN_notification(request.raw_post)
+    case response
+      when "VERIFIED"
+        puts response.inspect
+      # check that paymentStatus=Completed
+      # check that txnId has not been previously processed
+      # check that receiverEmail is your Primary PayPal email
+      # check that paymentAmount/paymentCurrency are correct
+      # process payment
+      when "INVALID"
+        puts response.inspect
+      # log for investigation
+      else
+        # error
+    end
+    render :nothing => true
+  end
+
   def req_payment
     ppr = PayPal::Recurring.new({
                                     :token       => session[:token],
@@ -56,6 +76,21 @@ class PaypalController < ApplicationController
     puts "--------------------------------------------"
     ppr = PayPal::Recurring::Notification.new(params)
     puts "_________#{ppr.response}__________________"
+  end
+
+  protected
+  def validate_IPN_notification(raw)
+    uri = URI.parse('https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = 60
+    http.read_timeout = 60
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    http.use_ssl = true
+    response = http.post(uri.request_uri, raw,
+                         'Content-Length' => "#{raw.size}",
+                         'User-Agent' => "My custom user agent"
+    )
+    puts response.inspect
   end
 end
 
