@@ -13,7 +13,7 @@ class PaypalController < ApplicationController
                            :description  => "Awesome - Monthly Subscription",
                            :amount       => "9.00",
                            :currency     => "USD"
-                                 })
+                            })
     response = ppr.checkout
     if response.valid?
       session[:token] = response.params[:TOKEN]
@@ -64,22 +64,20 @@ class PaypalController < ApplicationController
     #     # error
     # end
     # render :nothing => true
+
     puts "________________#{params}_________________"
-
-
-
       # PaymentsNotification.create!(:params => params.to_json.gsub("\"", "'"), :status => params[:payment_status], :transaction_id => params[:txn_id])
-      ppr = PayPal::Recurring::Notification.new(params)
-      t = ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
+    ppr = PayPal::Recurring::Notification.new(params)
+    t = ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
     puts "#{t.inspect}"
     puts "#{t.body}"
-      if ppr.verified? && ppr.completed?
-        if ppr.express_checkout? || ppr.recurring_payment?
-          #do stuff here
-        end
-      else
-        #raise response.errors.inspect
+    if ppr.verified? && ppr.completed?
+      if ppr.express_checkout? || ppr.recurring_payment?
+        UserMailer.notify_me(params).deliver
       end
+    else
+      raise response.errors
+    end
 
     render :nothing => true
   end
@@ -93,15 +91,11 @@ class PaypalController < ApplicationController
                                     :description => "Awesome - Monthly Subscription"
                                 })
     response = ppr.request_payment
-  end
-
-  def ipn
-    puts "--------------------------------------------"
-    ppr = PayPal::Recurring::Notification.new(params)
-    puts "_________#{ppr.response}__________________"
+    render :nothing => true
   end
 
   private
+
   def validate_IPN_notification(raw)
     puts "INSIDE VALIDATE IPN METHOD"
     begin

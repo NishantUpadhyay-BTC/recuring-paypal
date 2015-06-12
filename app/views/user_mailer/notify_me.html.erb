@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TRANSACTION DETAIL</title>
+</head>
+<body>
+  <table border="1">
+    <% @response.each do |method| %>
+    <tr>
+      <td><%= method.to_s.camelize %></td>
+      <td><%= @original_response.send(method) %></td>
+    </tr>
+    <% end %>
+  </table>
+</body>
