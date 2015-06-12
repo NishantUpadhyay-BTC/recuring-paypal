@@ -73,9 +73,12 @@ class PaypalController < ApplicationController
     puts "#{t.body}"
     if ppr.verified? && ppr.completed?
       if ppr.express_checkout? || ppr.recurring_payment?
-        UserMailer.notify_me(params).deliver
+        puts "**************Inside verified****************"
+        y = UserMailer.notify_me(params).deliver
+        puts "!!!!!!!!!!#{y}!!!!!!!!"
       end
     else
+      puts "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
       raise response.errors
     end
 
