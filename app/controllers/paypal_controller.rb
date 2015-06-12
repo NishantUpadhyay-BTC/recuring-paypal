@@ -10,6 +10,7 @@ class PaypalController < ApplicationController
     ppr = PayPal::Recurring.new({
                            :return_url   => 'https://morning-castle-2674.herokuapp.com/paypal/new',
                            :cancel_url   => "https://morning-castle-2674.herokuapp.com/",
+                           :ipn_url     => "https://morning-castle-2674.herokuapp.com/paypal/notifier",
                            :description  => "Awesome - Monthly Subscription",
                            :amount       => "9.00",
                            :currency     => "USD"
