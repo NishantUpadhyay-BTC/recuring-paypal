@@ -71,7 +71,15 @@ class PaypalController < ApplicationController
     t = ppr.response #send back the response to confirm IPN, stops further IPN notifications from being sent out
     puts "#{t.inspect}"
     puts "#{t.body}"
+
+    puts "IS verified?????#{ppr.verified?}"
+    puts "IS completed?????#{ppr.completed?}"
+
     if ppr.verified? && ppr.completed?
+
+      puts "IS EXPRESS CHECKOUT?????#{ppr.express_checkout?}"
+      puts "IS RECCURING CHECKOUT?????#{ppr.recurring_payment?}"
+
       if ppr.express_checkout? || ppr.recurring_payment?
         puts "**************Inside verified****************"
         y = UserMailer.notify_me(params).deliver
